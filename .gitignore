@@ -20,13 +20,28 @@
 *.mod
 *.smod
 
-# Compiled Static libraries
+# Compiled Static Libraries
 *.lai
 *.la
 *.a
-*.lib
 
 # Executables
 *.exe
 *.out
 *.app
+
+# Visual Studio 2022 Specific
+.vs/
+*.suo
+*.user
+
+# Build Results
+/x64/Debug/
+x64/Release/
+Debug/
+Release/
+
+# Visual Studio Project Files
+*.vcxproj
+*.vcxproj.user
+*.vcxproj.filters
