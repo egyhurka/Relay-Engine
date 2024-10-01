@@ -2,13 +2,15 @@
 
 #include <iostream>
 
+const char* glfwError = "ERROR::GLFW::";
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
 }
 
 Window::Window(int width, int height, const char* title) : w(width), h(height), t(title), window(nullptr) {
     if (!glfwInit()) {
-        std::cerr << "Failed to initialize GLFW" << std::endl;
+        std::cerr << glfwError << "FAILED_TO_INIT_GLFW" << std::endl;
         return;
     }
     
@@ -24,7 +26,7 @@ Window::~Window() {
 void Window::create() {
     window = glfwCreateWindow(w, h, t, nullptr, nullptr);
     if (!window) {
-        std::cerr << "Failed to create GLFW window" << std::endl;
+        std::cerr << glfwError << "FAILED_TO_CREATE_GLFW_WINDOW" << std::endl;
         glfwTerminate();
         return;
     }
@@ -32,7 +34,7 @@ void Window::create() {
     glfwMakeContextCurrent(window);
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-        std::cerr << "Failed to initialize GLAD" << std::endl;
+        std::cerr << "ERROR::GLAD::FAILED_TO_INIT_GLAD" << std::endl;
         return;
     }
 
