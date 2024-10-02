@@ -1,6 +1,6 @@
 #include "Renderer.h"
 
-#include <algorithm>
+#include <optional>
 
 Renderer::~Renderer() {
 	delete shader;
@@ -22,13 +22,23 @@ void Renderer::drawQueuedMeshes() {
 	useShader();
 	if (renderQueue.size() > 0) {
 		for (Mesh* e : renderQueue) {
+			shader->use();
+			std::optional<Texture> texture = e->getTexture();
+			if (texture.has_value()) {
+				texture.value().texUnit(shader, "tex0", 0);
+				texture.value().bind();
+			}
+			else {
+				ColorRGB color = e->getColor();
+				shader->setColor(color);
+			}
 			e->draw();
 		}
 	}
 }
 
-void Renderer::vsync(bool enabled, std::optional<int> target) {
-	glfwSwapInterval(enabled ? target.value_or(1) : 0);
+void Renderer::vSync(int interval) {
+	glfwSwapInterval(interval);
 }
 
 void Renderer::loadShader() {

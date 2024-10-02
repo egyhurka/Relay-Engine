@@ -14,6 +14,8 @@ public:
 	Mesh(std::vector<GLfloat> vertices, std::vector<GLuint> indices, ColorRGB, std::optional<Texture> Texture);
     ~Mesh();
     void draw();
+    ColorRGB getColor() const { return color; };
+    std::optional<Texture> getTexture() const { return texture; }
 private:
     std::vector<GLfloat> vertices;
     std::vector<GLuint> indices;

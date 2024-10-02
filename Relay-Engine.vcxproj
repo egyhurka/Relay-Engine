@@ -147,6 +147,7 @@
     <ClCompile Include="Engine\Mesh\Mesh.cpp" />
     <ClCompile Include="Engine\Renderer\Renderer.cpp" />
     <ClCompile Include="Engine\Renderer\Shader\Shader.cpp" />
+    <ClCompile Include="Engine\Texture\Texture.cpp" />
     <ClCompile Include="Engine\Window\Window.cpp" />
     <ClCompile Include="Source\glad.c" />
     <ClCompile Include="Source\main.cpp" />

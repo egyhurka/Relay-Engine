@@ -41,6 +41,14 @@ void Window::create() {
     setFramebufferSizeCallback();
 }
 
+void Window::setTitle(const char* title) {
+    glfwSetWindowTitle(window, title);
+}
+
+void Window::noResize(bool enabled) {
+    glfwWindowHint(GLFW_RESIZABLE, enabled ? GLFW_FALSE : GLFW_TRUE);
+}
+
 void Window::setFramebufferSizeCallback(bool useCallback) {
     if (useCallback) {
         glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);

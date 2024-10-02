@@ -15,7 +15,7 @@ public:
 	void addMeshToRenderQueue(Mesh* mesh);
 	void removeMeshFromRenderQueue(Mesh* mesh);
 	void drawQueuedMeshes();
-	static void vsync(bool enabled, std::optional<int> target);
+	static void vSync(int interval);
 	static void clearBuffers();
 private:
 	void loadShader();

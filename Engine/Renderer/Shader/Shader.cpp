@@ -32,6 +32,10 @@ void Shader::use() {
 	glUseProgram(ID);
 }
 
+void Shader::setColor(ColorRGB& color) {
+	setUniform3f("uColor", color.r, color.g, color.b);
+}
+
 std::string Shader::readFile(const char* path) {
 	if (!std::filesystem::exists(path)) {
 		std::cerr << shaderError << "PATH::FILE_DOES_NOT_EXISTS: " << path << std::endl;
@@ -66,4 +70,9 @@ void Shader::compileShader(GLuint shader, const char* source) {
 		glGetShaderInfoLog(shader, 512, nullptr, infolog);
 		std::cerr << shaderError << "COMPILE_FAILED: " << infolog << std::endl;
 	}
+}
+
+void Shader::setUniform3f(const GLchar* name, GLfloat& v0, GLfloat& v1, GLfloat& v3) {
+	GLint loc = glGetUniformLocation(ID, name);
+	glUniform3f(loc, v0, v1, v3);
 }

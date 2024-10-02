@@ -4,12 +4,16 @@
 
 #include <iostream>
 
+// TODO:
+//  - Mesh:Texture
+
 int main() {
     Window window(800, 600, "Relay Engine");
+    window.noResize(true);
     window.create();
 
-    Vec2i windowSize = window.getWindowSize();
-    Input::init((double)windowSize.x, (double)windowSize.y);
+    double lastTime = glfwGetTime();
+    int nbFrames = 0;
 
     Renderer renderer;
     renderer.init();
@@ -24,16 +28,31 @@ int main() {
         0, 1, 2
     };
 
-    ColorRGB color(1.0f, 0.5f, 0.2f);
-    std::optional<Texture> texture = std::nullopt;
+    ColorRGB color(1.0f, 1.0f, 0.0f);
+    // not working yet (Texture)
+    std::optional<Texture> texture = std::nullopt; //std::make_optional<Texture>("Source/Textures/tex0.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGB, GL_UNSIGNED_BYTE)
     Mesh mesh(vertices, indices, color, texture);
 
     renderer.addMeshToRenderQueue(&mesh);
 
-    Renderer::vsync(false, std::nullopt);
+    Renderer::vSync(0);
     glEnable(GL_DEPTH_TEST);
 
     while (!window.shouldClose()) {
+        double currentTime = glfwGetTime();
+        nbFrames++;
+
+        // FPS
+        if (currentTime - lastTime >= 1.0) {
+            double fps = double(nbFrames) / (currentTime - lastTime);
+
+            std::string newTitle = "Relay Engine | FPS: " + std::to_string(static_cast<int>(fps));
+            window.setTitle(newTitle.c_str());
+
+            nbFrames = 0;
+            lastTime = currentTime;
+        }
+
         // INPUT PROCESSING
         Input::processInput(window.getWindow());
 
@@ -45,6 +64,5 @@ int main() {
         glfwPollEvents();
     }
 
-    glfwTerminate();
     return EXIT_SUCCESS;
 }
