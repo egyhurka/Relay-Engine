@@ -1,37 +1,28 @@
 #include "Input.h"
 
-double Input::lastX = 0.0;
-double Input::lastY = 0.0;
-bool Input::firstMouse = true;
+bool wireframeMode = false, isF1Pressed = false;
 
-void Input::init(double width, double height) {
-	lastX = width / 2.0;
-	lastY = height / 2.0;
+Input::Input(int width, int height, GLFWwindow* window) : width(width), height(height), window(window) {
+	
 }
 
-void Input::processInput(GLFWwindow* window) {
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+void Input::processInput() {
+	if (getKey(GLFW_KEY_ESCAPE)) {
 		glfwSetWindowShouldClose(window, true);
+	}
+
+	if (getKey(GLFW_KEY_F1)) {
+		if (!isF1Pressed) {
+			wireframeMode = !wireframeMode;
+			glPolygonMode(GL_FRONT_AND_BACK, wireframeMode ? GL_FILL : GL_LINE);
+			isF1Pressed = true;
+		}
+	}
+	else {
+		isF1Pressed = false;
 	}
 }
 
-void Input::setMouseCallbacks(GLFWwindow* window) {
-	glfwSetCursorPosCallback(window, [](GLFWwindow* window, double xpos, double ypos) {
-		if (firstMouse) {
-			lastX = xpos;
-			lastY = ypos;
-			firstMouse = false;
-		}
-
-		lastX = xpos;
-		lastY = ypos;
-	});
-}
-
-double Input::getMouseX() {
-	return lastX;
-}
-
-double Input::getMouseY() {
-	return lastY;
+bool Input::getKey(int key) {
+	return glfwGetKey(window, key) == GLFW_PRESS;
 }

@@ -2,6 +2,9 @@
 #define SHADER_H
 
 #include <glad/glad.h>
+#include <glm.hpp>
+#include <gtc/matrix_transform.hpp>
+#include <gtc/type_ptr.hpp>
 
 #include "../../Utilities/Color.h"
 
@@ -16,6 +19,7 @@ public:
 	Shader(const char* vertexPath, const char* fragmentPath);
 	void use();
 	void setColor(ColorRGB& color);
+	void setMat4(const GLchar* name, const glm::mat4& mat);
 	GLuint getId() const { return ID; };
 private:
 	GLuint ID;

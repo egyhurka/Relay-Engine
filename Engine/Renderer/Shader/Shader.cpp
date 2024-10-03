@@ -36,6 +36,16 @@ void Shader::setColor(ColorRGB& color) {
 	setUniform3f("uColor", color.r, color.g, color.b);
 }
 
+void Shader::setMat4(const GLchar* name, const glm::mat4& mat) {
+	glUniformMatrix4fv(glGetUniformLocation(ID, name), 1, GL_FALSE, glm::value_ptr(mat));
+}
+
+void Shader::setUniform3f(const GLchar* name, GLfloat& v0, GLfloat& v1, GLfloat& v3) {
+	GLint loc = glGetUniformLocation(ID, name);
+	glUniform3f(loc, v0, v1, v3);
+}
+
+
 std::string Shader::readFile(const char* path) {
 	if (!std::filesystem::exists(path)) {
 		std::cerr << shaderError << "PATH::FILE_DOES_NOT_EXISTS: " << path << std::endl;
@@ -70,9 +80,4 @@ void Shader::compileShader(GLuint shader, const char* source) {
 		glGetShaderInfoLog(shader, 512, nullptr, infolog);
 		std::cerr << shaderError << "COMPILE_FAILED: " << infolog << std::endl;
 	}
-}
-
-void Shader::setUniform3f(const GLchar* name, GLfloat& v0, GLfloat& v1, GLfloat& v3) {
-	GLint loc = glGetUniformLocation(ID, name);
-	glUniform3f(loc, v0, v1, v3);
 }

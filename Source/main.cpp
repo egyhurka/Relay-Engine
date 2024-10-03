@@ -1,19 +1,25 @@
+/*
+    KEY_ESCAPE = exit;
+    KEY_F1 = wireframe mode;
+*/
+
 #include "../Engine/Window/Window.h"
 #include "../Engine/Input/Input.h"
 #include "../Engine/Renderer/Renderer.h"
 
 #include <iostream>
 
-// TODO:
-//  - Mesh:Texture
+const int width = 800, height = 600;
 
 int main() {
-    Window window(800, 600, "Relay Engine");
+    Window window(width, height, "Relay Engine");
     window.noResize(true);
     window.create();
 
     double lastTime = glfwGetTime();
     int nbFrames = 0;
+
+    Input input(width, height, window.getWindow());
 
     Renderer renderer;
     renderer.init();
@@ -29,14 +35,14 @@ int main() {
     };
 
     ColorRGB color(1.0f, 1.0f, 0.0f);
-    // not working yet (Texture)
+
+    // not working yet
     std::optional<Texture> texture = std::nullopt; //std::make_optional<Texture>("Source/Textures/tex0.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGB, GL_UNSIGNED_BYTE)
     Mesh mesh(vertices, indices, color, texture);
 
     renderer.addMeshToRenderQueue(&mesh);
 
-    Renderer::vSync(0);
-    glEnable(GL_DEPTH_TEST);
+    Renderer::vSync(false);
 
     while (!window.shouldClose()) {
         double currentTime = glfwGetTime();
@@ -54,7 +60,7 @@ int main() {
         }
 
         // INPUT PROCESSING
-        Input::processInput(window.getWindow());
+        input.processInput();
 
         // RENDERING
         Renderer::clearBuffers();

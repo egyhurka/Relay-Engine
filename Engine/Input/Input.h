@@ -6,14 +6,12 @@
 
 class Input {
 public:
-	static void init(double width, double height);
-	static void processInput(GLFWwindow* window);
-	static void setMouseCallbacks(GLFWwindow* window);
-	static double getMouseX();
-	static double getMouseY();
+	Input(int width, int height, GLFWwindow* window);
+	void processInput();
 private:
-	static double lastX, lastY;
-	static bool firstMouse;
+	bool getKey(int key);
+	GLFWwindow* window;
+	int width, height;
 };
 
 #endif // !INPUT_H

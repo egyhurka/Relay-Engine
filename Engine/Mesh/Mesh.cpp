@@ -2,8 +2,19 @@
 
 Mesh::Mesh(std::vector<GLfloat> vertices, std::vector<GLuint> indices, ColorRGB color, std::optional<Texture> texture) : vertices(std::move(vertices)), indices(std::move(indices)), color(color), texture(texture) {
     glGenVertexArrays(1, &VAO);
+    if (VAO == 0) {
+        std::cerr << "ERROR::OPENGL::VAO_NOT_GENERATED" << std::endl;
+    }
+
     glGenBuffers(1, &VBO);
+    if (VBO == 0) {
+        std::cerr << "ERROR::OPENGL::VBO_NOT_GENERATED" << std::endl;
+    }
+
     glGenBuffers(1, &EBO);
+    if (EBO == 0) {
+        std::cerr << "ERROR::OPENGL::EBO_NOT_GENERATED" << std::endl;
+    }
 
     glBindVertexArray(VAO);
 
@@ -28,6 +39,12 @@ Mesh::~Mesh() {
 
 void Mesh::draw() {
     glBindVertexArray(VAO);
+
+    if (this->indices.empty()) {
+        std::cerr << "ERROR::MESH::DRAW::NO_INDICES_AVAIBLE" << std::endl;
+        return;
+    }
+
     glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(this->indices.size()), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 }

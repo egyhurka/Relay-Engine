@@ -7,6 +7,17 @@ Renderer::~Renderer() {
 }
 
 void Renderer::init() {
+	// OPENGL OPTIONS
+	glEnable(GL_DEPTH_TEST);
+
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
+	glFrontFace(GL_CCW);
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	// OPENGL OPTIONS END
+
 	loadShader();
 }
 
@@ -37,8 +48,17 @@ void Renderer::drawQueuedMeshes() {
 	}
 }
 
-void Renderer::vSync(int interval) {
+void Renderer::vSync(bool interval) {
 	glfwSwapInterval(interval);
+}
+
+void Renderer::polygonMode(GLenum mode) {
+	if (mode == GL_FILL || mode == GL_LINE) {
+		glPolygonMode(GL_FRONT_AND_BACK, mode);
+	}
+	else {
+		std::cerr << "ERROR::RENDERER::INVALID_POLYGON_MODE" << std::endl;
+	}
 }
 
 void Renderer::loadShader() {
