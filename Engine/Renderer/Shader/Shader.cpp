@@ -37,7 +37,12 @@ void Shader::setColor(ColorRGB& color) {
 }
 
 void Shader::setMat4(const GLchar* name, const glm::mat4& mat) {
-	glUniformMatrix4fv(glGetUniformLocation(ID, name), 1, GL_FALSE, glm::value_ptr(mat));
+	GLint location = glGetUniformLocation(ID, name);
+	if (location == -1) {
+		std::cerr << "ERROR::SHADER::UNIFORM_NOT_FOUND: " << name << std::endl;
+		return;
+	}
+	glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(mat));
 }
 
 void Shader::setUniform3f(const GLchar* name, GLfloat& v0, GLfloat& v1, GLfloat& v3) {

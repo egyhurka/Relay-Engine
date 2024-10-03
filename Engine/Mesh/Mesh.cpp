@@ -1,6 +1,7 @@
 #include "Mesh.h"
 
-Mesh::Mesh(std::vector<GLfloat> vertices, std::vector<GLuint> indices, ColorRGB color, std::optional<Texture> texture) : vertices(std::move(vertices)), indices(std::move(indices)), color(color), texture(texture) {
+Mesh::Mesh(std::vector<GLfloat> vertices, std::vector<GLuint> indices, ColorRGB color, std::optional<Texture> texture) 
+    : vertices(std::move(vertices)), indices(std::move(indices)), color(color), texture(texture), modelMatrix(glm::mat4(1.0f)) {
     glGenVertexArrays(1, &VAO);
     if (VAO == 0) {
         std::cerr << "ERROR::OPENGL::VAO_NOT_GENERATED" << std::endl;
@@ -35,6 +36,14 @@ Mesh::~Mesh() {
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
     glDeleteBuffers(1, &EBO);
+}
+
+void Mesh::scale(float scaleFactor) {
+    modelMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(scaleFactor, scaleFactor, 1.0f));
+}
+
+void Mesh::rotate(float angle, const glm::vec3& axis) {
+    modelMatrix = glm::rotate(modelMatrix, glm::radians(angle), axis);
 }
 
 void Mesh::draw() {
