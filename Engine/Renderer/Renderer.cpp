@@ -2,8 +2,10 @@
 
 #include <optional>
 
-float lastTime = glfwGetTime();
+float lastTime = (float)glfwGetTime();
 bool backFaceRendering = false;
+
+Renderer::Renderer(Camera* camera) : camera(camera), shader(nullptr) {}
 
 Renderer::~Renderer() {
 	delete shader;
@@ -37,36 +39,30 @@ void Renderer::removeMeshFromRenderQueue(Mesh* mesh) {
 
 void Renderer::drawQueuedMeshes() {
 	useShader();
-	if (renderQueue.size() > 0) {
+	if (!renderQueue.empty()) {
 		for (Mesh* e : renderQueue) {
-			shader->use();
-
 			GLFWwindow* window = glfwGetCurrentContext();
 			int width, height;
 			glfwGetWindowSize(window, &width, &height);
 
-			float currentTime = glfwGetTime();
+			float currentTime = (float)glfwGetTime();
 			float deltaTime = currentTime - lastTime;
 			lastTime = currentTime;
-			float rotationSpeed = 90.0f; // deg/sec
+			float rotationSpeed = 20.0f; // deg/sec
 			float angle = rotationSpeed * deltaTime;
 
-			glm::mat4 model = glm::mat4(1.0f);
+			shader->use();
 
-			// scale OR rotate
-			e->scale(0.5f);
-			//e->rotate(angle, glm::vec3(1.0f, 0.0f, 0.0f));
-
-			model = e->getModelMatrix();
-
-			glm::mat4 view = glm::mat4(1.0f);
-			view = glm::translate(view, glm::vec3(0.0f, 0.0f, 0.0f));
-
-			glm::mat4 projection = glm::mat4(1.0f);
-
-			shader->setMat4("model", model);
-			shader->setMat4("view", view);
+			glm::mat4 projection = glm::perspective(glm::radians(camera->Zoom), (float)width / (float)height, 0.1f, 100.0f);;
 			shader->setMat4("projection", projection);
+
+			glm::mat4 view = camera->getViewMatrix();
+			shader->setMat4("view", view);
+
+			glm::mat4 model = e->getModelMatrix();
+			//e->rotate(angle, glm::vec3(0.0f, 0.0f, 1.0f));
+			shader->setMat4("model", model);
+
 
 			std::optional<Texture> texture = e->getTexture();
 			if (texture.has_value()) {

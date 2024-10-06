@@ -38,11 +38,7 @@ Mesh::~Mesh() {
     glDeleteBuffers(1, &EBO);
 }
 
-void Mesh::scale(float scaleFactor) {
-    modelMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(scaleFactor, scaleFactor, 1.0f));
-}
-
-void Mesh::rotate(float angle, const glm::vec3& axis) {
+void Mesh::rotate(float angle, glm::vec3 axis) {
     modelMatrix = glm::rotate(modelMatrix, glm::radians(angle), axis);
 }
 
@@ -56,4 +52,8 @@ void Mesh::draw() {
 
     glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(this->indices.size()), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
+}
+
+void Mesh::translate(glm::vec3 position) {
+    modelMatrix = glm::translate(modelMatrix, position);
 }

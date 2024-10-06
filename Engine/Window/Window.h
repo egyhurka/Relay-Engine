@@ -14,6 +14,7 @@ public:
 	void setTitle(const char* title);
 	void noResize(bool enabled);
 	void setFramebufferSizeCallback(bool useCallback = false);
+	void captureMouse(bool capture = true);
 	void swapBuffers() const { glfwSwapBuffers(window); };
 	GLFWwindow* getWindow() const { return window; }
 	bool shouldClose() const { return glfwWindowShouldClose(window); }

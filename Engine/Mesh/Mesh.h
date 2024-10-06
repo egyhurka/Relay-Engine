@@ -15,11 +15,11 @@
 
 class Mesh {
 public: 
-	Mesh(std::vector<GLfloat> vertices, std::vector<GLuint> indices, ColorRGB, std::optional<Texture> Texture);
+	Mesh(std::vector<GLfloat> vertices, std::vector<GLuint> indices, ColorRGB color, std::optional<Texture> Texture);
     ~Mesh();
-    void scale(float scaleFactor);
-    void rotate(float angle, const glm::vec3& axis);
+    void rotate(float angle, glm::vec3 axis);
     void draw();
+    void translate(glm::vec3 position);
     const glm::mat4& getModelMatrix() const { return modelMatrix; };
     ColorRGB getColor() const { return color; };
     std::optional<Texture> getTexture() const { return texture; }

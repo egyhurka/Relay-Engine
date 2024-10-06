@@ -10,9 +10,11 @@
 
 #include "Shader/Shader.h"
 #include "../Mesh/Mesh.h"
+#include "../Camera/Camera.h"
 
 class Renderer {
 public:
+	Renderer(Camera* camera);
 	~Renderer();
 	void init();
 	void addMeshToRenderQueue(Mesh* mesh);
@@ -25,6 +27,7 @@ private:
 	void loadShader();
 	void useShader();
 	Shader* shader;
+	Camera* camera;
 	std::vector<Mesh*> renderQueue;
 };
 

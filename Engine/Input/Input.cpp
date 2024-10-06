@@ -1,16 +1,17 @@
 #include "Input.h"
 
-bool wireframeMode = false, isF1Pressed = false;
+bool Input::wireframeMode = false;
+bool Input::isF1Pressed = false;
 
-Input::Input(int width, int height, GLFWwindow* window) : width(width), height(height), window(window) {
-	
-}
+Input::Input(int width, int height, GLFWwindow* window, Camera* camera) : width(width), height(height), window(window), camera(camera) {}
 
-void Input::processInput() {
+void Input::processInput(float deltaTime) {
+	// CLOSE WINDOW
 	if (getKey(GLFW_KEY_ESCAPE)) {
 		glfwSetWindowShouldClose(window, true);
 	}
 
+	// WIREFRAME MODE
 	if (getKey(GLFW_KEY_F1)) {
 		if (!isF1Pressed) {
 			wireframeMode = !wireframeMode;
@@ -21,6 +22,20 @@ void Input::processInput() {
 	else {
 		isF1Pressed = false;
 	}
+
+	// CAMERA MOVEMENT
+	if (getKey(GLFW_KEY_W))
+		camera->ProcessKeyboard(FORWARD, deltaTime);
+	if (getKey(GLFW_KEY_S))
+		camera->ProcessKeyboard(BACKWARD, deltaTime);
+	if (getKey(GLFW_KEY_A))
+		camera->ProcessKeyboard(LEFT, deltaTime);
+	if (getKey(GLFW_KEY_D))
+		camera->ProcessKeyboard(RIGHT, deltaTime);
+	if (getKey(GLFW_KEY_E))
+		camera->ProcessKeyboard(UP, deltaTime);
+	if (getKey(GLFW_KEY_Q))
+		camera->ProcessKeyboard(DOWN, deltaTime);
 }
 
 bool Input::getKey(int key) {
