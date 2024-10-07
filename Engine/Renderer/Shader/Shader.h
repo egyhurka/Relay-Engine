@@ -17,13 +17,16 @@
 class Shader {
 public:
 	Shader(const char* vertexPath, const char* fragmentPath);
+
 	void use();
 	void setColor(ColorRGB& color);
 	void setMat4(const GLchar* name, const glm::mat4& mat);
-	GLuint getId() const { return ID; };
+
+	inline const GLuint getId() const { return ID; };
 private:
 	GLuint ID;
 	std::string readFile(const char* path);
+
 	void compileShader(GLuint shader, const char* source);
 	void setUniform3f(const GLchar* name, GLfloat& v0, GLfloat& v1, GLfloat& v3);
 };

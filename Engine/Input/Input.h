@@ -9,6 +9,7 @@
 class Input {
 public:
 	Input(int width, int height, GLFWwindow* window, Camera* camera);
+
 	void processInput(float deltaTime);
 private:
 	static bool wireframeMode;

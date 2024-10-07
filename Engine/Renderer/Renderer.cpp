@@ -2,16 +2,20 @@
 
 #include <optional>
 
-float lastTime = (float)glfwGetTime();
 bool backFaceRendering = false;
 
-Renderer::Renderer(Camera* camera) : camera(camera), shader(nullptr) {}
+Renderer::Renderer(Camera* camera) : window(nullptr), camera(camera), shader(nullptr), time(nullptr), width(0), height(0) {}
 
 Renderer::~Renderer() {
 	delete shader;
 }
 
-void Renderer::init() {
+void Renderer::init(TimeManager* time) {
+	this->window = glfwGetCurrentContext();
+	this->time = time;
+
+	glfwGetWindowSize(window, &width, &height);
+
 	// OPENGL OPTIONS
 	glEnable(GL_DEPTH_TEST);
 
@@ -38,31 +42,13 @@ void Renderer::removeMeshFromRenderQueue(Mesh* mesh) {
 }
 
 void Renderer::drawQueuedMeshes() {
-	useShader();
 	if (!renderQueue.empty()) {
 		for (Mesh* e : renderQueue) {
-			GLFWwindow* window = glfwGetCurrentContext();
-			int width, height;
-			glfwGetWindowSize(window, &width, &height);
+			useShader();
 
-			float currentTime = (float)glfwGetTime();
-			float deltaTime = currentTime - lastTime;
-			lastTime = currentTime;
-			float rotationSpeed = 20.0f; // deg/sec
-			float angle = rotationSpeed * deltaTime;
+			//e->rotate(20.0f, time->deltaTime, glm::vec3(0.0f, 0.0f, 1.0f));
 
-			shader->use();
-
-			glm::mat4 projection = glm::perspective(glm::radians(camera->Zoom), (float)width / (float)height, 0.1f, 100.0f);;
-			shader->setMat4("projection", projection);
-
-			glm::mat4 view = camera->getViewMatrix();
-			shader->setMat4("view", view);
-
-			glm::mat4 model = e->getModelMatrix();
-			//e->rotate(angle, glm::vec3(0.0f, 0.0f, 1.0f));
-			shader->setMat4("model", model);
-
+			updateUniforms(e);
 
 			std::optional<Texture> texture = e->getTexture();
 			if (texture.has_value()) {
@@ -73,6 +59,7 @@ void Renderer::drawQueuedMeshes() {
 				ColorRGB color = e->getColor();
 				shader->setColor(color);
 			}
+
 			e->draw();
 		}
 	}
@@ -92,12 +79,22 @@ void Renderer::polygonMode(GLenum mode) {
 }
 
 void Renderer::loadShader() {
-	shader = new Shader("Engine/Renderer/Shader/vertex/shader.vert",
-						"Engine/Renderer/Shader/fragment/shader.frag");
+	shader = new Shader("Engine/Renderer/Shader/vertex/shader.vert", "Engine/Renderer/Shader/fragment/shader.frag");
 }
 
 void Renderer::useShader() {
 	shader->use();
+}
+
+void Renderer::updateUniforms(Mesh* e) {
+	glm::mat4 projection = glm::perspective(glm::radians(camera->Zoom), (float)width / (float)height, 0.1f, 200.0f);;
+	shader->setMat4("projection", projection);
+
+	glm::mat4 view = camera->getViewMatrix();
+	shader->setMat4("view", view);
+
+	glm::mat4 model = e->getModelMatrix();
+	shader->setMat4("model", model);
 }
 
 void Renderer::clearBuffers() {

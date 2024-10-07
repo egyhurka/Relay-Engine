@@ -16,7 +16,6 @@ public:
 private:
 	GLuint ID;
 	GLenum type;
-
 };
 
 #endif // !TEXTURE_H

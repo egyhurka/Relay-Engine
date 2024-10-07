@@ -152,6 +152,7 @@
     <ClCompile Include="Engine\Window\Window.cpp" />
     <ClCompile Include="Source\glad.c" />
     <ClCompile Include="Source\main.cpp" />
+    <ClCompile Include="Utilities\Time\TimeManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Camera\Camera.h" />
@@ -166,6 +167,7 @@
     <ClInclude Include="OpenGL\GLFW\glfw3native.h" />
     <ClInclude Include="OpenGL\stb\stb_image.h" />
     <ClInclude Include="Utilities\Color.h" />
+    <ClInclude Include="Utilities\Time\TimeManager.h" />
     <ClInclude Include="Utilities\Vector2.h" />
   </ItemGroup>
   <ItemGroup>

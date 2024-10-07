@@ -8,10 +8,6 @@ Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch) : Front
     updateCameraVectors();
 }
 
-glm::mat4 Camera::getViewMatrix() {
-    return glm::lookAt(Position, Position + Front, Up);
-}
-
 void Camera::ProcessKeyboard(Camera_Movement direction, float deltaTime) {
     float velocity = MovementSpeed * deltaTime;
     if (direction == FORWARD)
@@ -47,7 +43,7 @@ void Camera::ProcessMouseMovement(float xoffset, float yoffset, bool constrainPi
 }
 
 void Camera::ProcessMouseScroll(float yoffset) {
-    Zoom -= (float)yoffset;
+    Zoom -= (float)yoffset * 3;
     if (Zoom < 1.0f)
         Zoom = 1.0f;
     if (Zoom > 45.0f)
