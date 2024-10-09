@@ -23,7 +23,9 @@ public:
 	void removeMeshFromRenderQueue(Mesh* mesh);
 	void drawQueuedMeshes();
 
-	static void vSync(bool interval);
+	static inline void setBackgroundColor(ColorRGBA color) { glClearColor(color.r, color.g, color.b, color.a); };
+	static inline void vSync(bool interval) { glfwSwapInterval(interval); };
+
 	static void polygonMode(GLenum mode);
 	static void clearBuffers();
 private:

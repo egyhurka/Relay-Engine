@@ -44,25 +44,25 @@ public:
 private:
     inline std::vector<GLfloat> createCubeVertices() const {
         return {
-            -0.5f, -0.5f, -0.5f,
-             0.5f, -0.5f, -0.5f,
-             0.5f,  0.5f, -0.5f,
-            -0.5f,  0.5f, -0.5f,
-            -0.5f, -0.5f,  0.5f,
-             0.5f, -0.5f,  0.5f,
-             0.5f,  0.5f,  0.5f,
-            -0.5f,  0.5f,  0.5f
+            -0.5f, -0.5f, -0.5f, // 0
+             0.5f, -0.5f, -0.5f, // 1
+             0.5f,  0.5f, -0.5f, // 2
+            -0.5f,  0.5f, -0.5f, // 3
+            -0.5f, -0.5f,  0.5f, // 4
+             0.5f, -0.5f,  0.5f, // 5
+             0.5f,  0.5f,  0.5f, // 6
+            -0.5f,  0.5f,  0.5f  // 7
         };
     };
 
     inline std::vector<GLuint> createCubeIndices() const {
         return {
-           0, 1, 2, 0, 2, 3, // back
-           4, 5, 6, 4, 6, 7, // front
-           0, 1, 5, 0, 5, 4, // left
-           2, 3, 7, 2, 7, 6, // right
-           3, 0, 4, 3, 4, 7, // top
-           1, 2, 6, 1, 6, 5  // bottom
+            3, 2, 0, 2, 1, 0, // back
+            4, 5, 6, 4, 6, 7, // front
+            0, 1, 5, 0, 5, 4, // left
+            2, 3, 7, 2, 7, 6, // right
+            3, 0, 4, 3, 4, 7, // top
+            1, 2, 6, 1, 6, 5  // bottom
         };
     }
 };

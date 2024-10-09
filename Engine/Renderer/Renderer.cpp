@@ -21,9 +21,13 @@ void Renderer::init(TimeManager* time) {
 
 	// BACK_FACE RENDERING
 	if (backFaceRendering) {
-		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
-		glFrontFace(GL_CCW);	
+		glFrontFace(GL_CCW);
+	}
+	else {
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_FRONT);
+		glFrontFace(GL_CW);
 	}
 
 	glEnable(GL_BLEND);
@@ -43,9 +47,8 @@ void Renderer::removeMeshFromRenderQueue(Mesh* mesh) {
 
 void Renderer::drawQueuedMeshes() {
 	if (!renderQueue.empty()) {
+		useShader();
 		for (Mesh* e : renderQueue) {
-			useShader();
-
 			//e->rotate(20.0f, time->deltaTime, glm::vec3(0.0f, 0.0f, 1.0f));
 
 			updateUniforms(e);
@@ -65,10 +68,6 @@ void Renderer::drawQueuedMeshes() {
 	}
 }
 
-void Renderer::vSync(bool interval) {
-	glfwSwapInterval(interval);
-}
-
 void Renderer::polygonMode(GLenum mode) {
 	if (mode == GL_FILL || mode == GL_LINE) {
 		glPolygonMode(GL_FRONT_AND_BACK, mode);
@@ -86,6 +85,7 @@ void Renderer::useShader() {
 	shader->use();
 }
 
+glm::mat4 lastModel = glm::mat4(1.0f);
 void Renderer::updateUniforms(Mesh* e) {
 	glm::mat4 projection = glm::perspective(glm::radians(camera->Zoom), (float)width / (float)height, 0.1f, 200.0f);;
 	shader->setMat4("projection", projection);
@@ -94,7 +94,10 @@ void Renderer::updateUniforms(Mesh* e) {
 	shader->setMat4("view", view);
 
 	glm::mat4 model = e->getModelMatrix();
-	shader->setMat4("model", model);
+	if (model != lastModel) {
+		shader->setMat4("model", model);
+		lastModel = model;
+	}
 }
 
 void Renderer::clearBuffers() {
