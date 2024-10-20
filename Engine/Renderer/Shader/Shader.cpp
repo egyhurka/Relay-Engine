@@ -28,6 +28,10 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath) {
 	glDeleteShader(fragment);
 }
 
+Shader::~Shader() {
+	glDeleteProgram(ID);
+}
+
 void Shader::use() {
 	glUseProgram(ID);
 }
@@ -36,20 +40,38 @@ void Shader::setColor(ColorRGB& color) {
 	setUniform3f("uColor", color.r, color.g, color.b);
 }
 
+void Shader::setBool(const GLchar* name, bool value) {
+	GLint location = getlocation(name);
+	if (location != -1)
+		glUniform1i(location, value ? 1 : 0);
+}
+
 void Shader::setMat4(const GLchar* name, const glm::mat4& mat) {
+	GLint location = getlocation(name);
+	if (location != -1)
+		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(mat));
+}
+
+void Shader::setUniform3f(const GLchar* name, GLfloat& v0, GLfloat& v1, GLfloat& v2) {
+	GLint location = getlocation(name);
+	if (location != -1)
+		glUniform3f(location, v0, v1, v2);
+}
+
+void Shader::setUniform4f(const GLchar* name, GLfloat& v0, GLfloat& v1, GLfloat& v2, GLfloat& v3) {
+	GLint location = getlocation(name);
+	if (location != -1)
+		glUniform4f(location, v0, v1, v2, v3);
+}
+
+GLint Shader::getlocation(const GLchar* name) {
 	GLint location = glGetUniformLocation(ID, name);
 	if (location == -1) {
 		std::cerr << "ERROR::SHADER::UNIFORM_NOT_FOUND: " << name << std::endl;
-		return;
+		return -1;
 	}
-	glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(mat));
+	return location;
 }
-
-void Shader::setUniform3f(const GLchar* name, GLfloat& v0, GLfloat& v1, GLfloat& v3) {
-	GLint loc = glGetUniformLocation(ID, name);
-	glUniform3f(loc, v0, v1, v3);
-}
-
 
 std::string Shader::readFile(const char* path) {
 	if (!std::filesystem::exists(path)) {

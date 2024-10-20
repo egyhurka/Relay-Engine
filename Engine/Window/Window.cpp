@@ -8,7 +8,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
 }
 
-Window::Window(int width, int height, const char* title) : w(width), h(height), t(title), window(nullptr) {
+Window::Window(int width, int height, const char* title) : w(width), h(height), window(nullptr) {
     if (!glfwInit()) {
         std::cerr << glfwError << "FAILED_TO_INIT_GLFW" << std::endl;
         return;
@@ -18,14 +18,9 @@ Window::Window(int width, int height, const char* title) : w(width), h(height), 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_DEPTH_BITS, 24);
-}
 
-Window::~Window() {
-    glfwTerminate();
-}
-
-void Window::create() {
-    window = glfwCreateWindow(w, h, t, nullptr, nullptr);
+    // CREATE WINDOW
+    window = glfwCreateWindow(w, h, title, nullptr, nullptr);
     if (!window) {
         std::cerr << glfwError << "FAILED_TO_CREATE_GLFW_WINDOW" << std::endl;
         glfwTerminate();
@@ -42,12 +37,8 @@ void Window::create() {
     setFramebufferSizeCallback();
 }
 
-void Window::setTitle(const char* title) {
-    glfwSetWindowTitle(window, title);
-}
-
-void Window::noResize(bool enabled) {
-    glfwWindowHint(GLFW_RESIZABLE, enabled ? GLFW_FALSE : GLFW_TRUE);
+Window::~Window() {
+    glfwTerminate();
 }
 
 void Window::setFramebufferSizeCallback(bool useCallback) {
@@ -67,4 +58,8 @@ void Window::captureMouse(bool capture) {
     else {
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
+}
+
+void Window::setTitle(const char* title) {
+    glfwSetWindowTitle(window, title);
 }

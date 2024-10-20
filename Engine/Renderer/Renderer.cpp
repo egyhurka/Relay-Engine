@@ -37,33 +37,41 @@ void Renderer::init(TimeManager* time) {
 	loadShader();
 }
 
+void Renderer::cleanUp() {
+	for (auto object : instancedQueue) {
+		delete object;
+	}
+	instancedQueue.clear();
+
+	for (auto mesh : renderQueue) {
+		delete mesh;
+	}
+	renderQueue.clear();
+}
+
 void Renderer::addMeshToRenderQueue(Mesh* mesh) {
 	renderQueue.push_back(mesh);
 }
 
-void Renderer::removeMeshFromRenderQueue(Mesh* mesh) {
-	// ---
+void Renderer::addInstancedObjectToRenderQueue(InstancedObject* object) {
+	instancedQueue.push_back(object);
 }
 
 void Renderer::drawQueuedMeshes() {
-	if (!renderQueue.empty()) {
-		useShader();
-		for (Mesh* e : renderQueue) {
+	useShader();
+	if (renderQueue.size() >= 1) {
+		for (Mesh* mesh : renderQueue) {
 			//e->rotate(20.0f, time->deltaTime, glm::vec3(0.0f, 0.0f, 1.0f));
+			//e->scale(1.5f);
+			shader->setBool("isInstanced", false);
+			mesh->draw(shader);
+		}
+	}
 
-			updateUniforms(e);
-
-			std::optional<Texture> texture = e->getTexture();
-			if (texture.has_value()) {
-				texture.value().texUnit(shader, "tex0", 0);
-				texture.value().bind();
-			}
-			else {
-				ColorRGB color = e->getColor();
-				shader->setColor(color);
-			}
-
-			e->draw();
+	if (instancedQueue.size() >= 1) {
+		for (InstancedObject* object : instancedQueue) {
+			shader->setBool("isInstanced", true);
+			object->draw(shader);
 		}
 	}
 }
@@ -83,23 +91,13 @@ void Renderer::loadShader() {
 
 void Renderer::useShader() {
 	shader->use();
+	updateUniforms();
 }
 
-glm::mat4 lastModel = glm::mat4(1.0f);
-void Renderer::updateUniforms(Mesh* e) {
+void Renderer::updateUniforms(){
 	glm::mat4 projection = glm::perspective(glm::radians(camera->Zoom), (float)width / (float)height, 0.1f, 200.0f);;
 	shader->setMat4("projection", projection);
 
 	glm::mat4 view = camera->getViewMatrix();
 	shader->setMat4("view", view);
-
-	glm::mat4 model = e->getModelMatrix();
-	if (model != lastModel) {
-		shader->setMat4("model", model);
-		lastModel = model;
-	}
-}
-
-void Renderer::clearBuffers() {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }

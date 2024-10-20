@@ -14,7 +14,7 @@
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
-const int width = 1920, height = 1080;
+const int width = 800, height = 600;
 
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 float lastX = width / 2.0f;
@@ -24,13 +24,11 @@ bool firstMouse = true;
 int main() {
     Window window(width, height, "Relay Engine");
     window.noResize(true);
-    window.create();
     window.captureMouse();
 
     glfwSetFramebufferSizeCallback(window.getWindow(), framebuffer_size_callback);
     glfwSetCursorPosCallback(window.getWindow(), mouse_callback);
     glfwSetScrollCallback(window.getWindow(), scroll_callback);
-    
 
     Renderer renderer(&camera);
     Input input(width, height, window.getWindow(), &camera);
@@ -45,22 +43,40 @@ int main() {
     // not working yet
     //std::optional<Texture> texture = std::make_optional<Texture>("Source/Textures/tex0.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGB, GL_UNSIGNED_BYTE);
 
-    int numCubes = 5'000;
+    const int totalCubes = 1'000'000;
+    const int batchSize = 1000;
 
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_real_distribution<> dis(-30.0f, 30.0f);
+    std::uniform_real_distribution<> dis(-300.0f, 300.0f);
 
-    for (int i = 0; i < numCubes; ++i) {
-        ColorRGB randomColor = { 1.0f, 1.0f, 1.0f};
-        do {
-            randomColor = ColorRGB(dis(gen), dis(gen), dis(gen));
-        } while (randomColor.r == 0.0f && randomColor.g == 0.0f && randomColor.b == 0.0f);
-        CubeMesh* cube = new CubeMesh(randomColor, std::nullopt);
+    ColorRGB color = { 0.2f, 0.2f, 1.0f };
+
+    InstancedObject* instancedObject = new InstancedObject(new CubeMesh(color, std::nullopt));
+
+    for (int i = 0; i < totalCubes; i += batchSize) {
+        for (int j = 0; j < batchSize && (i + j) < totalCubes; ++j) {
+            glm::vec3 randomPosition(dis(gen), dis(gen), dis(gen));
+            instancedObject->addInstancePosition(randomPosition);
+        }
+        std::cout << "ENGINE::INSTANCES::LOADED " << std::min(i + batchSize, totalCubes) << " OUT OF " << totalCubes << std::endl;
+    }
+
+    instancedObject->setupInstances();
+    renderer.addInstancedObjectToRenderQueue(instancedObject);
+
+    /*ColorRGB color2 = {0.0f, 0.3f, 1.0f};
+    for (int i = 0; i < 1; ++i) {
+        CubeMesh* cube = new CubeMesh(color2, std::nullopt);
         glm::vec3 randomPosition(dis(gen), dis(gen), dis(gen));
         cube->translate(randomPosition);
         renderer.addMeshToRenderQueue(cube);
-    }
+    }*/
+
+    // NOT WORKING WITHOUT THIS
+    ColorRGB testColor = { 0.0f, 1.0f, 0.0f };
+    CubeMesh* testCube = new CubeMesh(testColor, std::nullopt);
+    renderer.addMeshToRenderQueue(testCube);
 
     Renderer::vSync(false);
 
@@ -90,6 +106,10 @@ int main() {
         window.swapBuffers();
         glfwPollEvents();
     }
+
+    std::cout << "ENGINE::CLEANUP::PROGRESS" << std::endl;
+    renderer.cleanUp();
+    std::cout << "ENGINE::CLEANUP::DONE" << std::endl;
 
     return EXIT_SUCCESS;
 }

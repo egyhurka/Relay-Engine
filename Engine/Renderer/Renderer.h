@@ -19,27 +19,31 @@ public:
 	~Renderer();
 
 	void init(TimeManager* time);
+	void cleanUp();
 	void addMeshToRenderQueue(Mesh* mesh);
-	void removeMeshFromRenderQueue(Mesh* mesh);
+	void addInstancedObjectToRenderQueue(InstancedObject* object);
 	void drawQueuedMeshes();
+	
+	inline const Shader* getShader() const { return shader; };
 
-	static inline void setBackgroundColor(ColorRGBA color) { glClearColor(color.r, color.g, color.b, color.a); };
 	static inline void vSync(bool interval) { glfwSwapInterval(interval); };
+	static inline void setBackgroundColor(ColorRGBA color) { glClearColor(color.r, color.g, color.b, color.a); };
+	static inline void clearBuffers() { glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); };
 
 	static void polygonMode(GLenum mode);
-	static void clearBuffers();
 private:
 	Shader* shader;
 	Camera* camera;
 	GLFWwindow* window;
 	TimeManager* time;
 	std::vector<Mesh*> renderQueue;
+	std::vector<InstancedObject*> instancedQueue;
 
 	int width, height;
 
 	void loadShader();
 	void useShader();
-	void updateUniforms(Mesh* e);
+	void updateUniforms();
 };
 
 #endif // !RENDERER_H

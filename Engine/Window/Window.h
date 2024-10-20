@@ -11,12 +11,11 @@ public:
 	Window(int width, int height, const char* title);
 	~Window();
 
-	void create();
-	void setTitle(const char* title);
-	void noResize(bool enabled);
 	void setFramebufferSizeCallback(bool useCallback = false);
 	void captureMouse(bool capture = true);
+	void setTitle(const char* title);
 
+	inline void noResize(bool enabled) { glfwWindowHint(GLFW_RESIZABLE, enabled ? GLFW_FALSE : GLFW_TRUE); };
 	inline void swapBuffers() const { glfwSwapBuffers(window); }
 	inline GLFWwindow* getWindow() const { return window; }
 	inline const Vec2i getWindowSize() const { return Vec2i(w, h); }
@@ -24,7 +23,6 @@ public:
 private:
 	GLFWwindow* window;
 	int w, h;
-	const char* t;
 };
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
