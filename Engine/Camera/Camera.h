@@ -5,7 +5,7 @@
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
 
-enum Camera_Movement {
+enum CameraMovement {
     FORWARD,
     BACKWARD,
     LEFT,
@@ -24,25 +24,27 @@ class Camera {
 public:
     Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH);
 
-    float Zoom;
+    float zoom;
 
-    void ProcessKeyboard(Camera_Movement direction, float deltaTime);
+    inline const void setNearPlane(float nearPlane) { pNearPlane = nearPlane; };
+    inline const void setFarPlane(float farPlane) { pFarPlane = farPlane; };
+
+    inline const float getNearPlane() const { return pNearPlane; };
+    inline const float getFarPlane() const { return pFarPlane; };
+
+    inline glm::mat4 getViewMatrix() { return glm::lookAt(position, position + front, up); };
+
+    inline void setMovementSpeedMultiplier(float value = 1.0f) { movementSpeed = SPEED * value; };
+
+    void ProcessKeyboard(CameraMovement direction, float deltaTime);
     void ProcessMouseMovement(float xoffset, float yoffset, bool constrainPitch = true);
     void ProcessMouseScroll(float yoffset);
-
-    inline glm::mat4 getViewMatrix() const { return glm::lookAt(Position, Position + Front, Up); }
 private:
     void updateCameraVectors();
 	glm::mat4 viewMatrix;
-    glm::vec3 Position;
-    glm::vec3 Front;
-    glm::vec3 Up;
-    glm::vec3 Right;
-    glm::vec3 WorldUp;
-    float Yaw;
-    float Pitch;
-    float MovementSpeed;
-    float MouseSensitivity;
+    glm::vec3 position, front, up, right, worldUp;
+    float yaw, pitch, movementSpeed, mouseSensitivity;
+    float pNearPlane, pFarPlane;
 };
 
 #endif // !CAMERA_H

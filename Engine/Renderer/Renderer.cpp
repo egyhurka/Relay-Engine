@@ -4,15 +4,18 @@
 
 bool backFaceRendering = false;
 
-Renderer::Renderer(Camera* camera) : window(nullptr), camera(camera), shader(nullptr), time(nullptr), width(0), height(0) {}
+Renderer::Renderer(Camera* camera) : window(nullptr), camera(camera), shader(nullptr), time(nullptr), width(0), height(0) {
+	nPlane = camera->getNearPlane();
+	fPlane = camera->getFarPlane();
+}
 
 Renderer::~Renderer() {
 	delete shader;
 }
 
 void Renderer::init(TimeManager* time) {
-	this->window = glfwGetCurrentContext();
-	this->time = time;
+	window = glfwGetCurrentContext();
+	time = time;
 
 	glfwGetWindowSize(window, &width, &height);
 
@@ -35,18 +38,6 @@ void Renderer::init(TimeManager* time) {
 	// OPENGL OPTIONS END
 
 	loadShader();
-}
-
-void Renderer::cleanUp() {
-	for (auto object : instancedQueue) {
-		delete object;
-	}
-	instancedQueue.clear();
-
-	for (auto mesh : renderQueue) {
-		delete mesh;
-	}
-	renderQueue.clear();
 }
 
 void Renderer::addMeshToRenderQueue(Mesh* mesh) {
@@ -95,7 +86,7 @@ void Renderer::useShader() {
 }
 
 void Renderer::updateUniforms(){
-	glm::mat4 projection = glm::perspective(glm::radians(camera->Zoom), (float)width / (float)height, 0.1f, 200.0f);;
+	glm::mat4 projection = glm::perspective(glm::radians(camera->zoom), (float)width / (float)height, nPlane, fPlane);;
 	shader->setMat4("projection", projection);
 
 	glm::mat4 view = camera->getViewMatrix();

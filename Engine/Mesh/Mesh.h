@@ -19,36 +19,26 @@
 class Mesh {
 public: 
     Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices, ColorRGB color, std::optional<Texture> texture);
-    virtual ~Mesh();
+    ~Mesh();
+
+    bool isTransparent = false;
 
     void rotate(float rotationSpeed, float deltaTime, glm::vec3 axis);
     void scale(float scaleFactor);
     void translate(glm::vec3 position);
 
-    virtual void draw(Shader* shader);
+    void draw(Shader* shader);
 
-    inline ColorRGB getColor() const { return color; }
+    inline void setColor(ColorRGB color) { this->color = color; };
+
+    inline ColorRGB getColor() const { return color; };
     inline const std::optional<Texture> getTexture() const { return texture; };
     inline const glm::mat4& getModelMatrix() const { return modelMatrix; };
-    inline const GLuint getVAO() const { return VAO; }
-    inline const size_t getVertexCount() const { return indices.size(); }
-private:
-    glm::mat4 modelMatrix;
-    std::vector<Vertex> vertices;
-    std::vector<GLuint> indices;
-    std::optional<Texture> texture;
-    ColorRGB color;
-    GLuint VAO, VBO, EBO;
- 
-    void setupMesh();
-};
+    inline const GLuint getVAO() const { return VAO; };
+    inline const GLuint getVertexCount() const { return static_cast<GLuint>(indices.size()); };
+    inline const std::unique_ptr<Mesh> clone() { return std::make_unique<Mesh>(vertices, indices, color, texture); };
 
-class CubeMesh : public Mesh {
-public:
-    CubeMesh(ColorRGB color, std::optional<Texture> Texture);
-
-private:
-    inline std::vector<Vertex> createCubeVertices() const {
+    static inline const std::vector<Vertex> createCubeVertices() {
         std::vector<Vertex> vertices = {
             // POSITION                         // COLOR                         // NORMAL
             {glm::vec3(-0.5f, -0.5f, -0.5f),   glm::vec3(1.0f, 0.0f, 0.0f),     glm::vec3(0.0f, 0.0f, -1.0f)},
@@ -64,7 +54,7 @@ private:
         return vertices;
     }
 
-    inline std::vector<GLuint> createCubeIndices() const {
+    static inline const std::vector<GLuint> createCubeIndices() {
         return {
             3, 2, 0, 2, 1, 0, // back
             4, 5, 6, 4, 6, 7, // front
@@ -74,6 +64,16 @@ private:
             1, 2, 6, 1, 6, 5  // bottom
         };
     }
+
+private:
+    glm::mat4 modelMatrix;
+    std::vector<Vertex> vertices;
+    std::vector<GLuint> indices;
+    std::optional<Texture> texture;
+    ColorRGB color;
+    GLuint VAO, VBO, EBO;
+
+    void setupMesh();
 };
 
 #endif // !MESH_H

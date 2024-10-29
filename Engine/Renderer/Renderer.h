@@ -9,6 +9,7 @@
 #include <vector>
 
 #include "Shader/Shader.h"
+#include "Loader.h"
 #include "../Mesh/Mesh.h"
 #include "../Camera/Camera.h"
 #include "../../Utilities/Time/TimeManager.h"
@@ -19,12 +20,11 @@ public:
 	~Renderer();
 
 	void init(TimeManager* time);
-	void cleanUp();
 	void addMeshToRenderQueue(Mesh* mesh);
 	void addInstancedObjectToRenderQueue(InstancedObject* object);
 	void drawQueuedMeshes();
 	
-	inline const Shader* getShader() const { return shader; };
+	inline Shader* getShader() const { return shader; };
 
 	static inline void vSync(bool interval) { glfwSwapInterval(interval); };
 	static inline void setBackgroundColor(ColorRGBA color) { glClearColor(color.r, color.g, color.b, color.a); };
@@ -40,6 +40,7 @@ private:
 	std::vector<InstancedObject*> instancedQueue;
 
 	int width, height;
+	float nPlane, fPlane;
 
 	void loadShader();
 	void useShader();

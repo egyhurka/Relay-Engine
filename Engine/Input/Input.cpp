@@ -36,6 +36,14 @@ void Input::processInput(float deltaTime) {
 		camera->ProcessKeyboard(UP, deltaTime);
 	if (getKey(GLFW_KEY_Q))
 		camera->ProcessKeyboard(DOWN, deltaTime);
+
+	if (getKey(GLFW_KEY_LEFT_SHIFT)) {
+		camera->setMovementSpeedMultiplier(5);
+	}
+	else {
+		camera->setMovementSpeedMultiplier();
+	}
+	// CAMERA MOVEMENT END
 }
 
 bool Input::getKey(int key) {

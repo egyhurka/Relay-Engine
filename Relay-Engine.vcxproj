@@ -144,9 +144,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Camera\Camera.cpp" />
+    <ClCompile Include="Engine\Generation\InstancedObjectDistributor.cpp" />
     <ClCompile Include="Engine\Input\Input.cpp" />
     <ClCompile Include="Engine\Mesh\InstancedObject.cpp" />
     <ClCompile Include="Engine\Mesh\Mesh.cpp" />
+    <ClCompile Include="Engine\Renderer\Loader.cpp" />
     <ClCompile Include="Engine\Renderer\Renderer.cpp" />
     <ClCompile Include="Engine\Renderer\Shader\Shader.cpp" />
     <ClCompile Include="Engine\Texture\Texture.cpp" />
@@ -157,9 +159,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Camera\Camera.h" />
+    <ClInclude Include="Engine\Generation\InstancedObjectDistributor.h" />
     <ClInclude Include="Engine\Input\Input.h" />
     <ClInclude Include="Engine\Mesh\InstancedObject.h" />
     <ClInclude Include="Engine\Mesh\Mesh.h" />
+    <ClInclude Include="Engine\Renderer\Loader.h" />
     <ClInclude Include="Engine\Renderer\Renderer.h" />
     <ClInclude Include="Engine\Renderer\Shader\Shader.h" />
     <ClInclude Include="Engine\Texture\Texture.h" />
@@ -171,7 +175,6 @@
     <ClInclude Include="Utilities\Color.h" />
     <ClInclude Include="Utilities\Time\TimeManager.h" />
     <ClInclude Include="Utilities\Util.h" />
-    <ClInclude Include="Utilities\Vector2.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\Renderer\Shader\fragment\shader.frag" />

@@ -20,12 +20,14 @@ public:
 	~Shader();
 
 	void use();
-	void setColor(ColorRGB& color);
+	void setColor(ColorRGB& color, float alpha);
 
 	void setBool(const GLchar* name, bool value);
 	void setMat4(const GLchar* name, const glm::mat4& mat);
 	void setUniform3f(const GLchar* name, GLfloat& v0, GLfloat& v1, GLfloat& v2);
 	void setUniform4f(const GLchar* name, GLfloat& v0, GLfloat& v1, GLfloat& v3, GLfloat& v4);
+
+	bool getBool(const GLchar* name);
 
 	inline const GLuint getId() const { return ID; };
 private:

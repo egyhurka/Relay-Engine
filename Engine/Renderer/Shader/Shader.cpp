@@ -36,8 +36,8 @@ void Shader::use() {
 	glUseProgram(ID);
 }
 
-void Shader::setColor(ColorRGB& color) {
-	setUniform3f("uColor", color.r, color.g, color.b);
+void Shader::setColor(ColorRGB& color, float alpha) {
+	setUniform4f("uColor", color.r, color.g, color.b, alpha);
 }
 
 void Shader::setBool(const GLchar* name, bool value) {
@@ -62,6 +62,16 @@ void Shader::setUniform4f(const GLchar* name, GLfloat& v0, GLfloat& v1, GLfloat&
 	GLint location = getlocation(name);
 	if (location != -1)
 		glUniform4f(location, v0, v1, v2, v3);
+}
+
+bool Shader::getBool(const GLchar* name) {
+	GLint location = getlocation(name);
+	if (location != -1) {
+		GLint value;
+		glGetUniformiv(ID, location, &value);
+		return static_cast<bool>(value);
+	}
+	return false;
 }
 
 GLint Shader::getlocation(const GLchar* name) {

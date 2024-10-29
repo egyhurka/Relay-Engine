@@ -8,7 +8,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
 }
 
-Window::Window(int width, int height, const char* title) : w(width), h(height), window(nullptr) {
+Window::Window(unsigned int width,unsigned int height, const char* title) : w(width), h(height), window(nullptr) {
     if (!glfwInit()) {
         std::cerr << glfwError << "FAILED_TO_INIT_GLFW" << std::endl;
         return;

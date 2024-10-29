@@ -11,45 +11,23 @@ Mesh::~Mesh() {
     glDeleteBuffers(1, &EBO);
 }
 
-void Mesh::rotate(float rotationSpeed, float deltaTime, glm::vec3 axis) {
-    modelMatrix = glm::rotate(modelMatrix, glm::radians(rotationSpeed * deltaTime), axis);
-}
-
-void Mesh::draw(Shader* shader) {
-    shader->setColor(color);
-
-    if (texture.has_value()) {
-        texture.value().texUnit(shader, "tex0", 0);
-        texture.value().bind();
-    }
-
-    shader->setMat4("model", modelMatrix);
-
-    glBindVertexArray(VAO);
-
-    if (indices.empty()) {
-        std::cerr << "ERROR::MESH::DRAW::NO_INDICES_AVAIBLE" << std::endl;
-        return;
-    }
-
-    glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(indices.size()), GL_UNSIGNED_INT, 0);
-    glBindVertexArray(0);
-}
-
 void Mesh::setupMesh() {
     glGenVertexArrays(1, &VAO);
     if (VAO == 0) {
         std::cerr << "ERROR::OPENGL::VAO_NOT_GENERATED" << std::endl;
+        return;
     }
 
     glGenBuffers(1, &VBO);
     if (VBO == 0) {
         std::cerr << "ERROR::OPENGL::VBO_NOT_GENERATED" << std::endl;
+        return;
     }
 
     glGenBuffers(1, &EBO);
     if (EBO == 0) {
         std::cerr << "ERROR::OPENGL::EBO_NOT_GENERATED" << std::endl;
+        return;
     }
 
     glBindVertexArray(VAO);
@@ -76,8 +54,8 @@ void Mesh::setupMesh() {
     glBindVertexArray(0);
 }
 
-void Mesh::translate(glm::vec3 position) {
-    modelMatrix = glm::translate(modelMatrix, position);
+void Mesh::rotate(float rotationSpeed, float deltaTime, glm::vec3 axis) {
+    modelMatrix = glm::rotate(modelMatrix, glm::radians(rotationSpeed * deltaTime), axis);
 }
 
 void Mesh::scale(float scaleFactor) {
@@ -85,4 +63,29 @@ void Mesh::scale(float scaleFactor) {
     modelMatrix = glm::scale(modelMatrix, glm::vec3(scaleFactor, scaleFactor, scaleFactor));
 }
 
-CubeMesh::CubeMesh(ColorRGB color, std::optional<Texture> Texture) : Mesh(createCubeVertices(), createCubeIndices(), color, std::nullopt) {}
+void Mesh::translate(glm::vec3 position) {
+    modelMatrix = glm::translate(modelMatrix, position);
+}
+
+void Mesh::draw(Shader* shader) {
+    shader->setMat4("model", modelMatrix);
+
+    shader->setColor(color, 1.0f);
+
+    glBindVertexArray(VAO);
+
+    if (indices.empty()) {
+        std::cerr << "ERROR::MESH::DRAW::NO_INDICES_AVAIBLE" << std::endl;
+        return;
+    }
+
+    if (isTransparent)
+        glDepthMask(GL_FALSE);
+
+    glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(indices.size()), GL_UNSIGNED_INT, 0);
+
+    if (isTransparent)
+        glDepthMask(GL_TRUE);
+
+    glBindVertexArray(0);
+}
