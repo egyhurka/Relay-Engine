@@ -12,6 +12,8 @@ InstancedObject::InstancedObject(Mesh* mesh) : mesh(mesh) {
         std::cerr << "ERROR::OPENGL::INSTANCE_COLOR_VBO_NOT_GENERATED" << std::endl;
         return;
     }
+
+    mesh->isTransparent = true;
 }
 
 InstancedObject::~InstancedObject() {

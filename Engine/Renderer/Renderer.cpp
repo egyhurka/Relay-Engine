@@ -2,8 +2,6 @@
 
 #include <optional>
 
-bool backFaceRendering = false;
-
 Renderer::Renderer(Camera* camera) : window(nullptr), camera(camera), shader(nullptr), time(nullptr), width(0), height(0) {
 	nPlane = camera->getNearPlane();
 	fPlane = camera->getFarPlane();
@@ -82,13 +80,13 @@ void Renderer::loadShader() {
 
 void Renderer::useShader() {
 	shader->use();
-	updateUniforms();
 }
 
 void Renderer::updateUniforms(){
 	glm::mat4 projection = glm::perspective(glm::radians(camera->zoom), (float)width / (float)height, nPlane, fPlane);;
 	shader->setMat4("projection", projection);
 
+	camera->lookAt(camera->position + camera->front);
 	glm::mat4 view = camera->getViewMatrix();
 	shader->setMat4("view", view);
 }

@@ -8,7 +8,9 @@
 #include "../Engine/Window/Window.h"
 #include "../Engine/Input/Input.h"
 #include "../Engine/Renderer/Renderer.h"
+#include "../Engine/Generation/Random.h"
 #include "../Engine/Generation/InstancedObjectDistributor.h"
+
 
 #include <iostream>
 #include <random>
@@ -18,7 +20,7 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
 const int width = 800, height = 600;
 
-Camera camera(glm::vec3(0.0f, 0.0f, 0.0f));
+Camera camera(glm::vec3(-5.0f, 0.0f, 0.0f));
 float lastX = width / 2.0f;
 float lastY = height / 2.0f;
 bool firstMouse = true;
@@ -38,19 +40,34 @@ int main() {
     Renderer renderer(&camera);
     Input input(width, height, window.getWindow(), &camera);
     TimeManager time;
-
+    
     time.init();
     double fpsLastTime = time.currentTime;
     renderer.init(&time);
 
-    ColorRGB color = { 0.0f, 1.0f, 0.0f };
+    // YOUR CODE STARTS HERE:
+
+    ColorRGB color = { 0.0f, 0.3f, 1.0f };
     Mesh mesh(Mesh::createCubeVertices(), Mesh::createCubeIndices(), color, std::nullopt);
-    auto mesh2 = mesh.clone();
-    // IN PROGRESS: SHAPE (TRIANGLE AND MORE); COLOR METHOD (CONTINUOUS); SECOND COLOR ( std::nullopt); FADEFACTOR AND SCALE (1.0f, 1.0f)
-    InstancedObjectDistributor cube(&mesh, &renderer, CUBE, CONTINUOUS, 5'000, 2222, ColorRGB(0.5f, 0.5f, 0.5f), std::nullopt, 1.0f, 1.0f, glm::vec2(-100.0f, 100.0f));
-    InstancedObjectDistributor sphere(mesh2.get(), &renderer, SPHERE, CONTINUOUS, 2'000, 2223, ColorRGB(1.0f, 0.0f, 0.0f), std::nullopt, 1.0f, 1.0f, glm::vec2(-100.0f, 100.0f));
+    InstancedObject object(&mesh);
+    renderer.addMeshToRenderQueue(&mesh);
+
+    Random rnd(glm::vec2(-100.0f, 100.0f));
+    unsigned int totalCubes = 100'000;
+    Loader::batch(totalCubes, Loader::batchSizeCalculator(totalCubes), true, [&](int i) {
+        object.addInstancePosition(rnd.randomPosition());
+        ColorRGB color = { rnd.randomPosition().x, rnd.randomPosition().y, rnd.randomPosition().z };
+        object.addInstanceColor(color);
+    });
+
+    object.setupInstances();
+    renderer.addInstancedObjectToRenderQueue(&object);
+
+    // ENDS HERE
 
     Renderer::vSync(false);
+
+    camera.position = glm::vec3(0.0f, 1.0f, 5.0f);
 
     while (!window.shouldClose()) {
         time.update();
@@ -68,6 +85,9 @@ int main() {
 
         // INPUT PROCESSING
         input.processInput(time.deltaTime);
+
+        // UPDATE
+        renderer.updateUniforms();
 
         // RENDERING
         Renderer::clearBuffers();
@@ -127,4 +147,14 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
 
     instaceObject.setupInstances();
     renderer.addInstancedObjectToRenderQueue(&instaceObject);
+*/
+
+/* Cube and sphere distribution
+ColorRGB color = { 0.0f, 1.0f, 0.0f };
+    Mesh mesh(Mesh::createCubeVertices(), Mesh::createCubeIndices(), color, std::nullopt);
+    auto mesh2 = mesh.clone();
+    // IN PROGRESS: SHAPE (TRIANGLE AND MORE); COLOR METHOD (CONTINUOUS); SECOND COLOR ( std::nullopt); FADEFACTOR AND SCALE (1.0f, 1.0f)
+    InstancedObjectDistributor cube(&mesh, &renderer, CUBE, CONTINUOUS, 5'000, 2222, ColorRGB(0.5f, 0.5f, 0.5f), std::nullopt, 1.0f, 1.0f, glm::vec2(-100.0f, 100.0f));
+    InstancedObjectDistributor sphere(mesh2.get(), &renderer, SPHERE, CONTINUOUS, 2'000, 2223, ColorRGB(1.0f, 0.0f, 0.0f), std::nullopt, 1.0f, 1.0f, glm::vec2(-100.0f, 100.0f));
+
 */

@@ -43,5 +43,5 @@ void Loader::batch(unsigned int count,unsigned int batchSize, bool stopwatch, st
 }
 
 int Loader::batchSizeCalculator(unsigned int count) {
-    return count != 0 ? (int)(count / 100) * 5 : 1;
+    return count >= 100 ? (int)(count / 100) * 5 : 1;
 }

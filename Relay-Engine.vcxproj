@@ -145,6 +145,7 @@
   <ItemGroup>
     <ClCompile Include="Engine\Camera\Camera.cpp" />
     <ClCompile Include="Engine\Generation\InstancedObjectDistributor.cpp" />
+    <ClCompile Include="Engine\Generation\Random.cpp" />
     <ClCompile Include="Engine\Input\Input.cpp" />
     <ClCompile Include="Engine\Mesh\InstancedObject.cpp" />
     <ClCompile Include="Engine\Mesh\Mesh.cpp" />
@@ -160,6 +161,7 @@
   <ItemGroup>
     <ClInclude Include="Engine\Camera\Camera.h" />
     <ClInclude Include="Engine\Generation\InstancedObjectDistributor.h" />
+    <ClInclude Include="Engine\Generation\Random.h" />
     <ClInclude Include="Engine\Input\Input.h" />
     <ClInclude Include="Engine\Mesh\InstancedObject.h" />
     <ClInclude Include="Engine\Mesh\Mesh.h" />
@@ -179,6 +181,7 @@
   <ItemGroup>
     <None Include="Engine\Renderer\Shader\fragment\shader.frag" />
     <None Include="Engine\Renderer\Shader\vertex\shader.vert" />
+    <None Include="README.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

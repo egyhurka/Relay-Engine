@@ -43,6 +43,7 @@ void Input::processInput(float deltaTime) {
 	else {
 		camera->setMovementSpeedMultiplier();
 	}
+
 	// CAMERA MOVEMENT END
 }
 
