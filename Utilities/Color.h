@@ -5,7 +5,7 @@
 
 struct ColorRGB {
 	GLfloat r, g, b;
-	ColorRGB(GLfloat Red, GLfloat Green, GLfloat Blue) : r(Red), g(Green), b(Blue) {}
+	ColorRGB(GLfloat Red = 0.0f, GLfloat Green = 0.0f, GLfloat Blue = 0.0f) : r(Red), g(Green), b(Blue) {}
 };
 
 struct ColorRGBA {

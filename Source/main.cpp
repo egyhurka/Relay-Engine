@@ -5,125 +5,31 @@
     KEY_Q = move down;
 */
 
-#include "../Engine/Window/Window.h"
-#include "../Engine/Input/Input.h"
-#include "../Engine/Renderer/Renderer.h"
-#include "../Engine/Generation/Random.h"
-#include "../Engine/Generation/InstancedObjectDistributor.h"
-
+#include "../Engine/_Core/Engine.cpp"
 
 #include <iostream>
-#include <random>
 
-void mouse_callback(GLFWwindow* window, double xpos, double ypos);
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
-
-const int width = 800, height = 600;
-
-Camera camera(glm::vec3(-5.0f, 0.0f, 0.0f));
-float lastX = width / 2.0f;
-float lastY = height / 2.0f;
-bool firstMouse = true;
+using namespace ENGINE::RENDERER;
 
 int main() {
-    Window window(width, height, "Relay Engine");
-    window.noResize(true);
-    window.captureMouse();
-
-    glfwSetFramebufferSizeCallback(window.getWindow(), framebuffer_size_callback);
-    glfwSetCursorPosCallback(window.getWindow(), mouse_callback);
-    glfwSetScrollCallback(window.getWindow(), scroll_callback);
-
-    camera.setNearPlane(0.01f);
-    camera.setFarPlane(1000.0f);
-
-    Renderer renderer(&camera);
-    Input input(width, height, window.getWindow(), &camera);
-    TimeManager time;
-    
-    time.init();
-    double fpsLastTime = time.currentTime;
-    renderer.init(&time);
-
-    // YOUR CODE STARTS HERE:
+    ENGINE::PRESET_SETUP(PRESET_DEFAULT);
 
     ColorRGB color = { 0.0f, 0.3f, 1.0f };
-    Mesh mesh(Mesh::createCubeVertices(), Mesh::createCubeIndices(), color, std::nullopt);
-    InstancedObject object(&mesh);
-    renderer.addMeshToRenderQueue(&mesh);
+    Mesh mesh(Mesh::createCubeVertices(), Mesh::createCubeIndices());
+    ENGINE::RENDERER::renderer.addMeshToRenderQueue(&mesh);
 
-    Random rnd(glm::vec2(-100.0f, 100.0f));
-    unsigned int totalCubes = 100'000;
-    Loader::batch(totalCubes, Loader::batchSizeCalculator(totalCubes), true, [&](int i) {
-        object.addInstancePosition(rnd.randomPosition());
-        ColorRGB color = { rnd.randomPosition().x, rnd.randomPosition().y, rnd.randomPosition().z };
-        object.addInstanceColor(color);
-    });
-
-    object.setupInstances();
-    renderer.addInstancedObjectToRenderQueue(&object);
-
-    // ENDS HERE
-
-    Renderer::vSync(false);
-
-    camera.position = glm::vec3(0.0f, 1.0f, 5.0f);
-
-    while (!window.shouldClose()) {
-        time.update();
-        time.nbFrames++;
-
-        // FPS
-        if (time.currentTime - fpsLastTime >= 1.0) {
-            double fps = static_cast<double>(time.nbFrames);
-            std::string newTitle = "Relay Engine | FPS: " + std::to_string(static_cast<int>(fps));
-            window.setTitle(newTitle.c_str());
-
-            time.nbFrames = 0;
-            fpsLastTime += 1.0;
-        }
-
-        // INPUT PROCESSING
-        input.processInput(time.deltaTime);
-
+    while (!ENGINE::WINDOW::RUNNING()) {
         // UPDATE
-        renderer.updateUniforms();
+        ENGINE::UPDATE();
 
         // RENDERING
-        Renderer::clearBuffers();
-        Renderer::setBackgroundColor({0.0f, 0.0f, 0.0f, 1.0f});
+        ENGINE::RENDERER::DRAW();
 
-        renderer.drawQueuedMeshes(); 
-
-        window.swapBuffers();
-        glfwPollEvents();
+        // UPDATE WINDOW
+        ENGINE::WINDOW::UPDATE();
     }
 
     return EXIT_SUCCESS;
-}
-
-void mouse_callback(GLFWwindow* window, double xposIn, double yposIn) {
-    float xpos = static_cast<float>(xposIn);
-    float ypos = static_cast<float>(yposIn);
-
-    if (firstMouse)
-    {
-        lastX = xpos;
-        lastY = ypos;
-        firstMouse = false;
-    }
-
-    float xoffset = xpos - lastX;
-    float yoffset = lastY - ypos;
-
-    lastX = xpos;
-    lastY = ypos;
-
-    camera.ProcessMouseMovement(xoffset, yoffset);
-}
-
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
-    camera.ProcessMouseScroll(static_cast<float>(yoffset));
 }
 
 /* 1 million cube rendering

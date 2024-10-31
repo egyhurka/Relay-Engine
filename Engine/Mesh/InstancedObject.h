@@ -21,6 +21,7 @@ private:
 	std::vector<glm::vec3> instancedPositions;
 	std::vector<ColorRGB> instancedColors;
 	GLuint instanceVBO, instanceColorVBO;
+	size_t vertexCount, instanceCount;
 };
 
 #endif // !INSTANCEDOBJECT_H

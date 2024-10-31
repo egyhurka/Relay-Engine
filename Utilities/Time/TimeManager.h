@@ -1,17 +1,22 @@
 #ifndef TIMEMANAGER_H
 #define TIMEMANAGER_H
 
-#include <glfw3.h>
+#include "../../Engine/Window/Window.h"
+
+#include <string>
 
 class TimeManager {
 public:
-	void init();
+	TimeManager();
 	void update();
 
+	void displayFPS(Window& window);
+
 	int nbFrames = 0;
+	float deltaTime = 0.0f;
 	double lastTime = 0.0;
 	double currentTime = 0.0;
-	float deltaTime = 0.0f;
+	double fpsLastTime = 0.0;
 
 	class stopwatch {
 	public:

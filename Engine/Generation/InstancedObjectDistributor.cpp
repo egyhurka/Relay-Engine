@@ -10,7 +10,7 @@ InstancedObjectDistributor::InstancedObjectDistributor(Mesh* mesh, Renderer* ren
 	minVolume = glm::vec3(volume.x);
 	maxVolume = glm::vec3(volume.y);
 	
-	std::mt19937 generator(seed);
+	std::mt19937 generator(static_cast<unsigned int>(seed));
 
 	std::uniform_real_distribution<> dist(this->volume.x, this->volume.y);
 	

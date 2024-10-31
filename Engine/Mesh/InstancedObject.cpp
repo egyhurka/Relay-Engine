@@ -1,6 +1,6 @@
 #include "InstancedObject.h"
 
-InstancedObject::InstancedObject(Mesh* mesh) : mesh(mesh) {
+InstancedObject::InstancedObject(Mesh* mesh) : mesh(mesh), vertexCount(0), instanceCount(0) {
 	glGenBuffers(1, &instanceVBO);
 	glGenBuffers(1, &instanceColorVBO);
     if (instanceVBO == 0) {
@@ -55,6 +55,9 @@ void InstancedObject::setupInstances() {
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
+    vertexCount = mesh->getVertexCount();
+    instanceCount = instancedPositions.size();
+
     std::cout << "ENGINE::INSTANCES::READY" << std::endl;
 }
 
@@ -63,6 +66,6 @@ void InstancedObject::draw(Shader* shader) {
 
     glBindVertexArray(mesh->getVAO());
 
-    glDrawElementsInstanced(GL_TRIANGLES, static_cast<GLsizei>(mesh->getVertexCount()), GL_UNSIGNED_INT, 0, instancedPositions.size());
+    glDrawElementsInstanced(GL_TRIANGLES, static_cast<GLsizei>(vertexCount), GL_UNSIGNED_INT, 0, static_cast<GLsizei>(instanceCount));
     glBindVertexArray(0);
 }

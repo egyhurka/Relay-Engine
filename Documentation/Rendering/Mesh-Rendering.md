@@ -16,7 +16,7 @@ Alternatively, we can instantiate it using
 ColorRGB(1.0f, 1.0f, 1.0f);
 ```
 
-Since textures are not yet functional, we can use `std::nullopt` as the last parameter. The complete definition for creating the cube mesh looks like this
+Since textures are not yet functional, we can use `std::nullopt` as the last parameter or nothing. The complete definition for creating the cube mesh looks like this
 
 ```
 Mesh mesh(Mesh::createCubeVertices(), Mesh::createCubeIndices(), color, std::nullopt);
@@ -30,7 +30,7 @@ renderer.addMeshToRenderQueue(&mesh);
 In summary, we can condense the creation and addition of the cube mesh into three concise lines
 ```
 ColorRGB color = { 0.0f, 1.0f, 0.0f };
-Mesh mesh(Mesh::createCubeVertices(), Mesh::createCubeIndices(), color, std::nullopt);
+Mesh mesh(Mesh::createCubeVertices(), Mesh::createCubeIndices(), color);
 renderer.addMeshToRenderQueue(&mesh);
 ```
 
@@ -61,8 +61,7 @@ std::vector<GLuint> indices = {
 
 The rest of the code remains unchanged
 ```
-ColorRGB color = { 1.0f, 1.0f, 0.0f };
-Mesh mesh(vertices, indices, color, std::nullopt);
+Mesh mesh(vertices, indices);
 renderer.addMeshToRenderQueue(&mesh);
 ```
 
@@ -86,8 +85,7 @@ std::vector<GLuint> indices = {
     3, 4, 0   // Side triangle 4
 };
 
-ColorRGB color = { 1.0f, 1.0f, 0.0f };
-Mesh mesh(vertices, indices, color, std::nullopt);
+Mesh mesh(vertices, indices);
 renderer.addMeshToRenderQueue(&mesh);
 ```
 
@@ -98,8 +96,7 @@ To start, we define a cube mesh similarly to the previous example using `Mesh`. 
 
 Here’s the code for defining and queuing a simple cube instance
 ```
-ColorRGB color = { 0.0f, 0.3f, 1.0f };
-Mesh mesh(Mesh::createCubeVertices(), Mesh::createCubeIndices(), color, std::nullopt);
+Mesh mesh(Mesh::createCubeVertices(), Mesh::createCubeIndices());
 InstancedObject object(&mesh);
 renderer.addMeshToRenderQueue(&mesh);
 ```
@@ -126,7 +123,7 @@ object.setupInstances();
 Here's the entire code
 ```
 ColorRGB color = { 0.0f, 0.3f, 1.0f };
-Mesh mesh(Mesh::createCubeVertices(), Mesh::createCubeIndices(), color, std::nullopt);
+Mesh mesh(Mesh::createCubeVertices(), Mesh::createCubeIndices());
 InstancedObject object(&mesh);
 renderer.addMeshToRenderQueue(&mesh);
 
