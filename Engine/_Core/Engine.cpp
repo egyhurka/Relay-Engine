@@ -9,13 +9,14 @@
 
 namespace ENGINE {
 
-// GENERAL PRESETS
+// GENERAL ENGINE PRESETS
 #define PRESET_DEFAULT	0x00
 #define PRESET_A0		0x01
 
 // SPECIAL PRESETS
 #define PRESET_B0		0x10		// cube
 #define PRESET_B1		0x11		// 10 cubes without intancing
+#define PRESET_B2		0x12		// 100'000 cube with instancing
 
 // LOOP PRESETS
 #define PRESET_LOOP_1	0xA0
@@ -25,7 +26,7 @@ namespace ENGINE {
 	}
 
 	namespace CAMERA {
-		Camera camera(glm::vec3(-5.0f, 0.0f, 0.0f));
+		Camera camera(glm::vec3(0.0f, 0.0f, 5.0f));
 	}
 
 	namespace WINDOW {
@@ -84,8 +85,11 @@ namespace ENGINE {
 
 		// PROCESSING INPUT
 		INPUT::input.processInput(TIMEMANAGER::time.deltaTime);
+
+		RENDERER::UPDATE();
 	}
 
+	std::vector<Mesh> meshStorage;
 	void PRESET_SETUP(int PRESET) {
 		switch (PRESET) {
 		case PRESET_DEFAULT:
@@ -111,22 +115,31 @@ namespace ENGINE {
 			RENDERER::VSYNC(false);
 			break;
 		case PRESET_B0: {
-			ColorRGB color = { 0.0f, 1.0f, 0.0f };
-			Mesh mesh(Mesh::createCubeVertices(), Mesh::createCubeIndices(), color);
-			RENDERER::renderer.addMeshToRenderQueue(&mesh);
+			CAMERA::camera.position = glm::vec3(0.0f, 0.0f, 5.0f);
+			ColorRGB color = { 0.0f, 0.5f, 1.0f };
+			meshStorage.emplace_back(Mesh::createCubeVertices(), Mesh::createCubeIndices(), color);
+			RENDERER::renderer.addMeshToRenderQueue(&meshStorage.back());
 			break;
 		}
 		case PRESET_B1: {
 			int count = 10;
 			Random rnd(glm::vec2(-10, 10));
-			Loader::simple(count, true, [&]() {
+
+			for (int i = 0; i < count; i++) {
 				Mesh mesh(Mesh::createCubeVertices(), Mesh::createCubeIndices(), rnd.randomColor());
-				RENDERER::renderer.addMeshToRenderQueue(&mesh);
-			});
+				mesh.translate(rnd.randomPosition());
+				meshStorage.push_back(mesh);
+				RENDERER::renderer.addMeshToRenderQueue(&meshStorage.back());
+			}
+
+			/*Loader::simple(count, true, [&]() {
+				meshStorage.emplace_back(Mesh::createCubeVertices(), Mesh::createCubeIndices(), rnd.randomColor());
+				RENDERER::renderer.addMeshToRenderQueue(&meshStorage.back());
+			});*/
 			break;
 		}
 		case PRESET_LOOP_1: {
-			UPDATE();
+			ENGINE::UPDATE();
 			RENDERER::DRAW();
 			WINDOW::UPDATE();
 			break;

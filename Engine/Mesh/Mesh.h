@@ -18,7 +18,7 @@
 
 class Mesh {
 public: 
-    Mesh(const std::vector<Vertex> vertices, const std::vector<GLuint> indices, const ColorRGB color = ColorRGB(0.0f), const std::optional<Texture> texture = std::nullopt);
+    Mesh(const std::vector<Vertex> vertices, const std::vector<GLuint> indices, ColorRGB color = ColorRGB(0.0f), std::optional<Texture> texture = std::nullopt);
     ~Mesh();
 
     bool isTransparent = false;

@@ -1,6 +1,6 @@
 #include "Mesh.h"
 
-Mesh::Mesh(const std::vector<Vertex> vertices, const std::vector<GLuint> indices, const ColorRGB color, const std::optional<Texture> texture)
+Mesh::Mesh(const std::vector<Vertex> vertices, const std::vector<GLuint> indices, ColorRGB color, std::optional<Texture> texture)
     : vertices(vertices), indices(indices), color(color), texture(texture), modelMatrix(glm::mat4(1.0f)) {
     setupMesh();
 }
@@ -31,6 +31,11 @@ void Mesh::setupMesh() {
     }
 
     glBindVertexArray(VAO);
+
+    if (indices.empty()) {
+        std::cerr << "ERROR::MESH::DRAW::NO_INDICES_AVAIBLE" << std::endl;
+        return;
+    }
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
@@ -88,11 +93,6 @@ void Mesh::draw(Shader* shader) {
     }
 
     glBindVertexArray(VAO);
-
-    if (indices.empty()) {
-        std::cerr << "ERROR::MESH::DRAW::NO_INDICES_AVAIBLE" << std::endl;
-        return;
-    }
 
     if (!isTransparent)
         glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(indices.size()), GL_UNSIGNED_INT, 0);

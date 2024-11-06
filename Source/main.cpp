@@ -9,14 +9,10 @@
 
 #include <iostream>
 
-using namespace ENGINE::RENDERER;
-
 int main() {
     ENGINE::PRESET_SETUP(PRESET_DEFAULT);
 
-    ColorRGB color = { 0.0f, 0.3f, 1.0f };
-    Mesh mesh(Mesh::createCubeVertices(), Mesh::createCubeIndices());
-    ENGINE::RENDERER::renderer.addMeshToRenderQueue(&mesh);
+    ENGINE::PRESET_SETUP(PRESET_B0);
 
     while (!ENGINE::WINDOW::RUNNING()) {
         // UPDATE
