@@ -1,7 +1,7 @@
 #include "Mesh.h"
 
-Mesh::Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices, ColorRGB color, std::optional<Texture> texture)
-    : vertices(std::move(vertices)), indices(std::move(indices)), color(color), texture(texture), modelMatrix(glm::mat4(1.0f)) {
+Mesh::Mesh(const std::vector<Vertex> vertices, const std::vector<GLuint> indices, ColorRGB color, std::optional<Texture> texture)
+    : vertices(vertices), indices(indices), color(color), texture(texture), modelMatrix(glm::mat4(1.0f)) {
     setupMesh();
 }
 
@@ -32,6 +32,11 @@ void Mesh::setupMesh() {
 
     glBindVertexArray(VAO);
 
+    if (indices.empty()) {
+        std::cerr << "ERROR::MESH::DRAW::NO_INDICES_AVAIBLE" << std::endl;
+        return;
+    }
+
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
 
@@ -54,6 +59,19 @@ void Mesh::setupMesh() {
     glBindVertexArray(0);
 }
 
+bool equalv3(glm::vec3 a, glm::vec3 b) {
+    return a.x == b.x && a.y == b.y && a.z == b.z;
+}
+
+bool Mesh::hasValidVertexColors() {
+    for (const Vertex& vert : vertices) {
+        if (equalv3(vert.color, glm::vec3(0.0f, 0.0f, 0.0f))) {
+            return false;
+        }
+    }
+    return true;
+}
+
 void Mesh::rotate(float rotationSpeed, float deltaTime, glm::vec3 axis) {
     modelMatrix = glm::rotate(modelMatrix, glm::radians(rotationSpeed * deltaTime), axis);
 }
@@ -70,22 +88,14 @@ void Mesh::translate(glm::vec3 position) {
 void Mesh::draw(Shader* shader) {
     shader->setMat4("model", modelMatrix);
 
-    shader->setColor(color, 1.0f);
+    if (!hasValidVertexColors()) {
+        shader->setColor(color, 1.0f);
+    }
 
     glBindVertexArray(VAO);
 
-    if (indices.empty()) {
-        std::cerr << "ERROR::MESH::DRAW::NO_INDICES_AVAIBLE" << std::endl;
-        return;
-    }
-
-    if (isTransparent)
-        glDepthMask(GL_FALSE);
-
-    glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(indices.size()), GL_UNSIGNED_INT, 0);
-
-    if (isTransparent)
-        glDepthMask(GL_TRUE);
+    if (!isTransparent)
+        glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(indices.size()), GL_UNSIGNED_INT, 0);
 
     glBindVertexArray(0);
 }

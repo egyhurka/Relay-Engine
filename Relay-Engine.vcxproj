@@ -114,6 +114,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>$(ProjectDir)OpenGL\stb;$(ProjectDir)OpenGL\glm;$(ProjectDir)OpenGL\GLFW;$(ProjectDir)OpenGL\glad;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -132,6 +133,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>$(ProjectDir)OpenGL\stb;$(ProjectDir)OpenGL\glm;$(ProjectDir)OpenGL\GLFW;$(ProjectDir)OpenGL\glad;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -160,6 +162,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Camera\Camera.h" />
+    <ClInclude Include="Engine\_Core\Engine.cpp" />
     <ClInclude Include="Engine\Generation\InstancedObjectDistributor.h" />
     <ClInclude Include="Engine\Generation\Random.h" />
     <ClInclude Include="Engine\Input\Input.h" />

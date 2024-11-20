@@ -28,7 +28,7 @@ public:
 	inline Shader* getShader() const { return shader; };
 	inline void setBackFaceRendering(bool value) { backFaceRendering = value; };
 	
-	static inline void vSync(bool interval) { glfwSwapInterval(interval); };
+	static inline void vSync(bool interval = false) { glfwSwapInterval(interval); };
 	static inline void setBackgroundColor(ColorRGBA color) { glClearColor(color.r, color.g, color.b, color.a); };
 	static inline void clearBuffers() { glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); };
 

@@ -18,7 +18,7 @@
 
 class Mesh {
 public: 
-    Mesh(std::vector<Vertex> vertices, std::vector<GLuint> indices, ColorRGB color, std::optional<Texture> texture);
+    Mesh(const std::vector<Vertex> vertices, const std::vector<GLuint> indices, ColorRGB color = ColorRGB(0.0f), std::optional<Texture> texture = std::nullopt);
     ~Mesh();
 
     bool isTransparent = false;
@@ -41,14 +41,14 @@ public:
     static inline const std::vector<Vertex> createCubeVertices() {
         std::vector<Vertex> vertices = {
             // POSITION                         // COLOR                         // NORMAL
-            {glm::vec3(-0.5f, -0.5f, -0.5f),   glm::vec3(1.0f, 0.0f, 0.0f),     glm::vec3(0.0f, 0.0f, -1.0f)},
-            {glm::vec3(0.5f, -0.5f, -0.5f),    glm::vec3(0.0f, 1.0f, 0.0f),     glm::vec3(0.0f, 0.0f, -1.0f)},
-            {glm::vec3(0.5f,  0.5f, -0.5f),    glm::vec3(0.0f, 0.0f, 1.0f),     glm::vec3(0.0f, 0.0f, -1.0f)},
-            {glm::vec3(-0.5f,  0.5f, -0.5f),   glm::vec3(1.0f, 1.0f, 0.0f),     glm::vec3(0.0f, 0.0f, -1.0f)},
-            {glm::vec3(-0.5f, -0.5f,  0.5f),   glm::vec3(1.0f, 0.0f, 0.0f),     glm::vec3(0.0f, 0.0f,  1.0f)},
-            {glm::vec3(0.5f, -0.5f,  0.5f),    glm::vec3(0.0f, 1.0f, 0.0f),     glm::vec3(0.0f, 0.0f,  1.0f)},
-            {glm::vec3(0.5f,  0.5f,  0.5f),    glm::vec3(0.0f, 0.0f, 1.0f),     glm::vec3(0.0f, 0.0f,  1.0f)},
-            {glm::vec3(-0.5f,  0.5f,  0.5f),   glm::vec3(1.0f, 1.0f, 0.0f),     glm::vec3(0.0f, 0.0f,  1.0f)}
+            {glm::vec3(-0.5f, -0.5f, -0.5f),   glm::vec3(0.0f, 0.0f, 0.0f),     glm::vec3(0.0f, 0.0f, -1.0f)},
+            {glm::vec3(0.5f, -0.5f, -0.5f),    glm::vec3(0.0f, 0.0f, 0.0f),     glm::vec3(0.0f, 0.0f, -1.0f)},
+            {glm::vec3(0.5f,  0.5f, -0.5f),    glm::vec3(0.0f, 0.0f, 0.0f),     glm::vec3(0.0f, 0.0f, -1.0f)},
+            {glm::vec3(-0.5f,  0.5f, -0.5f),   glm::vec3(0.0f, 0.0f, 0.0f),     glm::vec3(0.0f, 0.0f, -1.0f)},
+            {glm::vec3(-0.5f, -0.5f,  0.5f),   glm::vec3(0.0f, 0.0f, 0.0f),     glm::vec3(0.0f, 0.0f,  1.0f)},
+            {glm::vec3(0.5f, -0.5f,  0.5f),    glm::vec3(0.0f, 0.0f, 0.0f),     glm::vec3(0.0f, 0.0f,  1.0f)},
+            {glm::vec3(0.5f,  0.5f,  0.5f),    glm::vec3(0.0f, 0.0f, 0.0f),     glm::vec3(0.0f, 0.0f,  1.0f)},
+            {glm::vec3(-0.5f,  0.5f,  0.5f),   glm::vec3(0.0f, 0.0f, 0.0f),     glm::vec3(0.0f, 0.0f,  1.0f)}
         };
 
         return vertices;
@@ -74,6 +74,7 @@ private:
     GLuint VAO, VBO, EBO;
 
     void setupMesh();
+    bool hasValidVertexColors();
 };
 
 #endif // !MESH_H

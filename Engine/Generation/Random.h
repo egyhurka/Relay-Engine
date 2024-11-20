@@ -2,6 +2,8 @@
 
 #include <glm.hpp>
 
+#include "../../Utilities/Color.h"
+
 #include <random>
 
 class Random {
@@ -9,6 +11,7 @@ public:
     Random(glm::vec2 volume);
 
     glm::vec3 randomPosition();
+    ColorRGB randomColor();
 
 private:
     std::random_device rd;

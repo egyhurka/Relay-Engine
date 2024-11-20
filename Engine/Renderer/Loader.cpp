@@ -8,7 +8,7 @@ void Loader::simple(unsigned int count, bool stopwatch, std::function<void()> fu
         stw->start();
     }
 
-    for (int i = 0; i < count; i++) {
+    for (unsigned int i = 0; i < count; i++) {
         function();
     }
     std::cout << "ENGINE::INSTANCES::LOADED" << std::endl;
@@ -20,7 +20,7 @@ void Loader::simple(unsigned int count, bool stopwatch, std::function<void()> fu
     }
 }
 
-void Loader::batch(unsigned int count,unsigned int batchSize, bool stopwatch, std::function<void(int i)> function) {
+void Loader::batch(unsigned int count, unsigned int batchSize, bool stopwatch, std::function<void(int i)> function) {
     std::optional<TimeManager::stopwatch> stw;
     
     if (stopwatch) {
@@ -28,8 +28,8 @@ void Loader::batch(unsigned int count,unsigned int batchSize, bool stopwatch, st
         stw->start();
     }
 
-    for (int i = 0; i < count; i += batchSize) {
-        for (int j = 0; j < batchSize && (i + j) < count; ++j) {
+    for (unsigned int i = 0; i < count; i += batchSize) {
+        for (unsigned int j = 0; j < batchSize && (i + j) < count; ++j) {
             function(i + j);
         }
         std::cout << "ENGINE::INSTANCES::LOADED " << std::min(i + batchSize, count) << " OUT OF " << count << std::endl;
